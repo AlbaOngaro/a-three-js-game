@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode=development --watch",
+    "start:dev": "webpack-dev-server",
     "prod": "webpack --mode=production"
   },
   "keywords": [],
@@ -18,7 +19,8 @@
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
     "three": "^0.99.0"

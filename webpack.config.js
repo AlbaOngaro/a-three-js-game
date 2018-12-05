@@ -9,6 +9,10 @@ module.exports = {
         filename: 'js/game.js',
         path: path.resolve(__dirname, 'dist')
     },
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true
+    },
     plugins: [
         new CleanWebpackPlugin(['dist'],{exclude:  ['index.html'],}),
         new CopyWebpackPlugin([
