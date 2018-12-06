@@ -30,6 +30,9 @@ coverage
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
+dist/*
+dist
+
 # Bower dependency directory (https://bower.io/)
 bower_components
 
