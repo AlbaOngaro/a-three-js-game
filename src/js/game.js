@@ -18,13 +18,25 @@ var animate = function () {
     requestAnimationFrame(animate);
 
     //cube.rotation.x += 0.01;
-    //cube.rotation.y += 0.01;
-    //cube.rotation.z += 0.01;
+    cube.rotation.y += 0.01;
+    cube.rotation.z += 0.01;
     
     //cube.position.x += 0.01;
-    camera.position.z += 0.05;
+    //camera.position.z += 0.05;
     
     renderer.render(scene, camera);
 };
 
 animate();
+
+
+class Pippo{
+    constructor(){
+        this.getInfo(["a", "h"], ["a", "h"])
+    }
+    getInfo(c,d){
+        const  r = [...c, ...d]
+    }
+}
+
+let pippo = new Pippo()

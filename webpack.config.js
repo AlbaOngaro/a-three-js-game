@@ -13,8 +13,26 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist'),
         compress: true
     },
+    module: {
+          rules: [
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            }
+        ],  
+    },
     plugins: [
-        new CleanWebpackPlugin(['dist'],{exclude:  ['index.html'],}),
+        new CleanWebpackPlugin([
+            'dist'
+        ],{
+            exclude:  ['index.html']
+        }),
         new CopyWebpackPlugin([
             { 
                 from: './src/scss/styles.scss', 
