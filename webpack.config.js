@@ -9,10 +9,6 @@ module.exports = {
         filename: 'js/game.js',
         path: path.resolve(__dirname, 'dist')
     },
-    devServer: {
-        contentBase: path.join(__dirname, 'dist'),
-        compress: true
-    },
     module: {
           rules: [
             {
@@ -47,5 +43,8 @@ module.exports = {
                 }
             },
         ])
-    ]
+    ],
+    devServer: {
+        contentBase: path.join(__dirname, 'dist')
+    }
 };
