@@ -28,13 +28,9 @@ class Game{
     }
 
     animate(){
+        requestAnimationFrame(this.animate.bind(this));
 
-        console.log('animate called!');
-
-        const game = this;
-        requestAnimationFrame(function(){game.animate});
-
-        this.cube.rotation.x += 0.01;
+        //this.cube.rotation.x += 0.01;
         this.cube.rotation.y += 0.01;
 
         this.renderer.render(this.scene, this.camera);

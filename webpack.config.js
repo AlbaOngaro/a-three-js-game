@@ -4,7 +4,12 @@ const sass = require('node-sass');
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
-    entry: './src/js/game.js',
+    entry: {
+        'bundle.js': [
+            path.resolve(__dirname, 'src/js/animationframepolyfill.js'),
+            path.resolve(__dirname, 'src/js/game.js')
+        ]
+    },
     output: {
         filename: 'js/game.js',
         path: path.resolve(__dirname, 'dist')
