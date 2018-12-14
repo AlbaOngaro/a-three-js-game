@@ -46,9 +46,10 @@ module.exports = {
                     return result.css.toString('utf-8');
                 }
             },
-        ]),
-        new CopyWebpackPlugin([
-            {from: './src/models', to: './models'}
+            {
+                from: './src/models', 
+                to: './models'
+            }
         ])
     ],
     devServer: {
