@@ -1,57 +1,87 @@
-var THREE = require('three');
+const THREE = require('three');
+const FBXLoader = require('three-fbxloader-offical')
+const OrbitControls = require('three-orbitcontrols')
 
 class Game{
     constructor(){
+        let game = this;
+
+        let container = document.createElement('div');
+        document.body.appendChild(container);
+
+        this.assetsPath = "./models";
+        this.mixers = [];
+
+        this.clock = new THREE.Clock();
+
+        this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+        this.camera.position.set(0,0,0);
+
+        this.controls = new THREE.OrbitControls(this.camera);
+        this.controls.target.set(100, 0, 0);
+        this.controls.update();
+
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        this.scene.background = new THREE.Color( 0xa0a0a0 );
+        this.scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(this.renderer.domElement);
+        let h_light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+        h_light.position.set( 0, 200, 0 );
+        this.scene.add( h_light );
 
-        const game = this;
+        let d_light = new THREE.DirectionalLight( 0xffffff );
+        d_light.position.set( 0, 200, 100 );
+        d_light.castShadow = true;
+        d_light.shadow.camera.top = 180;
+        d_light.shadow.camera.bottom = - 100;
+        d_light.shadow.camera.left = - 120;
+        d_light.shadow.camera.right = 120;
+        this.scene.add( d_light );
 
-        this.anims = ["walk","pick-up"];
-        this.assetsPath = "../assets/";
+        let mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+        mesh.rotation.x = - Math.PI / 2;
+        mesh.receiveShadow = true;
+        this.scene.add(mesh);
 
-        const options = {
-            assets:[],
-            onComplete: function(){
-                game.init();
-                game.animate();
-            }
-        }
+        let grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
+        grid.material.opacity = 0.2;
+        grid.material.transparent = true;
+        this.scene.add(grid);
 
-        this.anims.forEach(function(anim){
-            options.assets.push(`${game.assetsPath}fbx/${anim}.fbx`);
+        let loader = new THREE.FBXLoader();
+        loader.load(`${this.assetsPath}/fbx/walk.fbx`, function(object){
+            object.mixer = new THREE.AnimationMixer(object);
+            game.mixers.push(object.mixer);
+
+            let action = object.mixer.clipAction(object.animations[0]);
+            action.play();
+            object.traverse( function (child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            } );
+            game.scene.add(object);
         });
 
-        console.log(options.assets);
+        this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+        this.renderer.setPixelRatio( window.devicePixelRatio );
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
+        this.renderer.shadowMap.enabled = true;
+    
+        container.appendChild(this.renderer.domElement);
 
-        /* const geometry = new THREE.BoxGeometry(1,1,1);
-        const light = new THREE.DirectionalLight(0xffffff);
-        light.position.set(0,20,10);
-        const ambient = new THREE.AmbientLight(0x707070);
-
-        const material = new THREE.MeshPhongMaterial({color: 0x00aaff});
-
-        this.cube = new THREE.Mesh(geometry, material);
-
-        this.scene.add(this.cube);
-        this.scene.add(light);
-        this.scene.add(ambient);
-
-        this.camera.position.z = 3;
- 
-        this.animate();*/
+        this.animate();
     }
 
     animate(){
-        requestAnimationFrame(this.animate.bind(this));
-
-        //this.cube.rotation.x += 0.01;
-        this.cube.rotation.y += 0.01;
-
+        let game = this;
+        requestAnimationFrame(function(){game.animate();});
+        if (this.mixers.length > 0) {
+            for (var i = 0; i < this.mixers.length; i ++) {
+                this.mixers[ i ].update( this.clock.getDelta());
+            }
+        }
         this.renderer.render(this.scene, this.camera);
     }
 }
