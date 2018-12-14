@@ -4,88 +4,39 @@ const OrbitControls = require('three-orbitcontrols')
 
 class Game{
     constructor(){
-        let game = this;
-
-        let container = document.createElement('div');
-        document.body.appendChild(container);
-
-        this.assetsPath = "./models";
-        this.mixers = [];
-
-        this.clock = new THREE.Clock();
-
-        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-        //this.camera.position.set(120,320,190);
-        this.camera.position.set(210,270,285);
-
-        this.controls = new THREE.OrbitControls(this.camera);
-        this.controls.target.set(0, 0, 0);
-        this.controls.update();
-
-        this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0xa0a0a0);
-        this.scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
-
-        let h_light = new THREE.HemisphereLight(0xffffff, 0x444444);
-        h_light.position.set(0, 200, 0);
-        this.scene.add(h_light);
-
-        let d_light = new THREE.DirectionalLight(0xffffff);
-        d_light.position.set(0, 200, 100);
-        d_light.castShadow = true;
-        d_light.shadow.camera.top = 180;
-        d_light.shadow.camera.bottom = - 100;
-        d_light.shadow.camera.left = - 120;
-        d_light.shadow.camera.right = 120;
-        this.scene.add(d_light);
-
-        let mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
-        mesh.rotation.x = - Math.PI / 2;
-        mesh.receiveShadow = true;
-        this.scene.add(mesh);
-
-        let grid = new THREE.GridHelper(2000, 20, 0x000000, 0x000000);
-        grid.material.opacity = 0.2;
-        grid.material.transparent = true;
-        this.scene.add(grid);
-
-        let loader = new THREE.FBXLoader();
-        loader.load(`${this.assetsPath}/fbx/walk.fbx`, function(object){
-            object.mixer = new THREE.AnimationMixer(object);
-            game.mixers.push(object.mixer);
-
-            let action = object.mixer.clipAction(object.animations[0]);
-            action.play();
-            object.traverse( function (child) {
-                if (child.isMesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
-            } );
-            game.scene.add(object);
-        });
-
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.shadowMap.enabled = true;
-    
-        container.appendChild(this.renderer.domElement);
-
-        this.animate();
-    }
-
-    animate(){
-        let game = this;
-        requestAnimationFrame(function(){game.animate();});
-        if (this.mixers.length > 0) {
-            for (var i = 0; i < this.mixers.length; i ++) {
-                this.mixers[i].update(this.clock.getDelta());
-            }
+        this.colors = {
+            red:0xf25346,
+            white:0xd8d0d1,
+            brown:0x59332e,
+            pink:0xF5986E,
+            brownDark:0x23190f,
+            blue:0x68c3c0,
         }
-        this.renderer.render(this.scene, this.camera);
+
+        this.createScene();
+        this.createLights();
+        this.createPlane();
+        this.createSea();
+        this.createSky();
+        
+        this.loop();
     }
+
+    createScene(){}
+
+    createLights(){}
+
+    createPlane(){}
+
+    createSea(){}
+
+    createSky(){}
+
+    loop(){}
 }
 
-const game = new Game();
-window.game = game;
+window.addEventListener('load', function(){
+    const game = new Game();
+    //debug only
+    window.game = game;
+}, false);
