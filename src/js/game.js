@@ -15,10 +15,11 @@ class Game{
         this.clock = new THREE.Clock();
 
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-        this.camera.position.set(0,0,0);
+        //this.camera.position.set(120,320,190);
+        this.camera.position.set(210,270,285);
 
         this.controls = new THREE.OrbitControls(this.camera);
-        this.controls.target.set(100, 0, 0);
+        this.controls.target.set(0, 0, 0);
         this.controls.update();
 
         this.scene = new THREE.Scene();
@@ -87,3 +88,4 @@ class Game{
 }
 
 const game = new Game();
+window.game = game;
