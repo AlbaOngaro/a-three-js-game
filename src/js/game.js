@@ -14,7 +14,7 @@ class Game{
 
         this.clock = new THREE.Clock();
 
-        this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
         this.camera.position.set(0,0,0);
 
         this.controls = new THREE.OrbitControls(this.camera);
@@ -38,12 +38,12 @@ class Game{
         d_light.shadow.camera.right = 120;
         this.scene.add(d_light);
 
-        let mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+        let mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
         mesh.rotation.x = - Math.PI / 2;
         mesh.receiveShadow = true;
         this.scene.add(mesh);
 
-        let grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
+        let grid = new THREE.GridHelper(2000, 20, 0x000000, 0x000000);
         grid.material.opacity = 0.2;
         grid.material.transparent = true;
         this.scene.add(grid);
@@ -65,7 +65,7 @@ class Game{
         });
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        this.renderer.setPixelRatio( window.devicePixelRatio );
+        this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
     
