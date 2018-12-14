@@ -22,21 +22,21 @@ class Game{
         this.controls.update();
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color( 0xa0a0a0 );
-        this.scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
+        this.scene.background = new THREE.Color(0xa0a0a0);
+        this.scene.fog = new THREE.Fog(0xa0a0a0, 200, 1000);
 
-        let h_light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-        h_light.position.set( 0, 200, 0 );
-        this.scene.add( h_light );
+        let h_light = new THREE.HemisphereLight(0xffffff, 0x444444);
+        h_light.position.set(0, 200, 0);
+        this.scene.add(h_light);
 
-        let d_light = new THREE.DirectionalLight( 0xffffff );
-        d_light.position.set( 0, 200, 100 );
+        let d_light = new THREE.DirectionalLight(0xffffff);
+        d_light.position.set(0, 200, 100);
         d_light.castShadow = true;
         d_light.shadow.camera.top = 180;
         d_light.shadow.camera.bottom = - 100;
         d_light.shadow.camera.left = - 120;
         d_light.shadow.camera.right = 120;
-        this.scene.add( d_light );
+        this.scene.add(d_light);
 
         let mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
         mesh.rotation.x = - Math.PI / 2;
@@ -64,9 +64,9 @@ class Game{
             game.scene.add(object);
         });
 
-        this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio( window.devicePixelRatio );
-        this.renderer.setSize( window.innerWidth, window.innerHeight );
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
     
         container.appendChild(this.renderer.domElement);
@@ -79,7 +79,7 @@ class Game{
         requestAnimationFrame(function(){game.animate();});
         if (this.mixers.length > 0) {
             for (var i = 0; i < this.mixers.length; i ++) {
-                this.mixers[ i ].update( this.clock.getDelta());
+                this.mixers[i].update(this.clock.getDelta());
             }
         }
         this.renderer.render(this.scene, this.camera);
