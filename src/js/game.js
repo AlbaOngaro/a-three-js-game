@@ -9,7 +9,26 @@ class Game{
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
-        const geometry = new THREE.BoxGeometry(1,1,1);
+        const game = this;
+
+        this.anims = ["walk","pick-up"];
+        this.assetsPath = "../assets/";
+
+        const options = {
+            assets:[],
+            onComplete: function(){
+                game.init();
+                game.animate();
+            }
+        }
+
+        this.anims.forEach(function(anim){
+            options.assets.push(`${game.assetsPath}fbx/${anim}.fbx`);
+        });
+
+        console.log(options.assets);
+
+        /* const geometry = new THREE.BoxGeometry(1,1,1);
         const light = new THREE.DirectionalLight(0xffffff);
         light.position.set(0,20,10);
         const ambient = new THREE.AmbientLight(0x707070);
@@ -23,8 +42,8 @@ class Game{
         this.scene.add(ambient);
 
         this.camera.position.z = 3;
-
-        this.animate();
+ 
+        this.animate();*/
     }
 
     animate(){

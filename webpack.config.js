@@ -6,7 +6,6 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 module.exports = {
     entry: {
         'bundle.js': [
-            path.resolve(__dirname, 'src/js/animationframepolyfill.js'),
             path.resolve(__dirname, 'src/js/game.js')
         ]
     },
