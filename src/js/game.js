@@ -3,7 +3,6 @@ const FBXLoader = require('three-fbxloader-offical')
 const OrbitControls = require('three-orbitcontrols')
 import Sea from './Sea';
 import Cloud from './Cloud';
-import sky from './Sky';
 import Sky from './Sky';
 
 class Game{
