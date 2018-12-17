@@ -45,6 +45,9 @@ class Game{
         this.createSea();
         this.createSky();
         
+        //handle airplane movements
+        document.addEventListener('keydown', this.handlePlaneMovements(this, even), false);
+
         //main game loop
         this.loop();
     }
@@ -172,6 +175,10 @@ class Game{
         this.airplane.mesh.scale.set(.25,.25,.25);
         this.airplane.mesh.position.y = 100;
         this.scene.add(this.airplane.mesh);
+    }
+
+    handlePlaneMovements(event){
+        this.airplane += 0.01;    
     }
 
     loop(){
