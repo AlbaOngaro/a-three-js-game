@@ -4,6 +4,7 @@ const OrbitControls = require('three-orbitcontrols')
 import Sea from './Sea';
 import Cloud from './Cloud';
 import Sky from './Sky';
+import Airplane from './Airplane';
 
 class Game{
     constructor(){
@@ -35,6 +36,7 @@ class Game{
         this.shadowLight;
         this.sea;
         this.sky;
+        this.airplane;
 
         // main methods
         this.createScene();
@@ -165,9 +167,25 @@ class Game{
 	    this.scene.add(this.sky.mesh);
     }
 
-    createPlane(){}
+    createPlane(){
+        this.airplane = new Airplane(THREE, this.colors);
+        this.airplane.mesh.scale.set(.25,.25,.25);
+        this.airplane.mesh.position.y = 100;
+        this.scene.add(this.airplane.mesh);
+    }
 
-    loop(){}
+    loop(){
+        // Rotate the propeller, the sea and the sky
+        this.airplane.propeller.rotation.x += 0.3;
+        this.sea.mesh.rotation.z += .005;
+        this.sky.mesh.rotation.z += .01;
+
+        // render the scene
+        this.renderer.render(this.scene, this.camera);
+
+        // call the loop function again
+        requestAnimationFrame(this.loop.bind(this));
+    }
 }
 
 window.addEventListener('load', function(){
