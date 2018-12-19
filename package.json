@@ -28,6 +28,7 @@
   "dependencies": {
     "three": "^0.99.0",
     "three-fbxloader-offical": "^1.0.0",
-    "three-orbitcontrols": "^2.99.1"
+    "three-orbitcontrols": "^2.99.1",
+    "three-time": "^0.9.4"
   }
 }

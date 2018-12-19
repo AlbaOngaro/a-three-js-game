@@ -1,6 +1,7 @@
 const THREE = require('three');
 const FBXLoader = require('three-fbxloader-offical')
 const OrbitControls = require('three-orbitcontrols')
+import Time from 'three-time';
 import Sea from './Sea';
 import Cloud from './Cloud';
 import Sky from './Sky';
@@ -37,6 +38,7 @@ class Game{
         this.sea;
         this.sky;
         this.airplane;
+        this.time = new Time();
 
         this.speed = 1.2;
         this.toStartPos;
@@ -63,18 +65,28 @@ class Game{
 
         switch(key){
             case 38://up arrow
-                this.airplane.mesh.position.y += .5;
-                this.airplane.mesh.rotation.z += .01;
+                this.airplane.mesh.position.y += .7;
+                if(this.airplane.mesh.rotation.z <= .3)
+                    this.airplane.mesh.rotation.z += .01;
                 break;
             case 40://down arrow
-                this.airplane.mesh.position.y -= .5;
-                this.airplane.mesh.rotation.z -= .01;
+                this.airplane.mesh.position.y -= .7;
+                if(this.airplane.mesh.rotation.z >= -.3)
+                    this.airplane.mesh.rotation.z -= .01;
+                break;
+            case 37: //left arrow
+                this.airplane.mesh.position.x -= .5;
+                break;
+            case 39: //right arrow
+                this.airplane.mesh.position.x += .5;
                 break;
         }
     }
 
     handleKeyUp(evt){
         let self = this;
+
+        let delta = self.time.delta / 100;
 
         this.toStartPos = setInterval(function(){
             if(self.airplane.mesh.rotation.z < 0){
@@ -89,7 +101,13 @@ class Game{
             if(self.airplane.mesh.position.y < 120){
                 self.airplane.mesh.position.y += .5;
             }
-        }, 100);
+            if(self.airplane.mesh.position.x < 0){
+                self.airplane.mesh.position.x += .5;
+            }
+            if(self.airplane.mesh.position.x > 0){
+                self.airplane.mesh.position.x -= .5;
+            }
+        }, delta);
     }
 
     createScene(){
