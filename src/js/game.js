@@ -38,6 +38,9 @@ class Game{
         this.sky;
         this.airplane;
 
+        this.speed = 1.2;
+        this.toStartPos;
+
         // main methods
         this.createScene();
         this.createLights();
@@ -46,14 +49,47 @@ class Game{
         this.createSky();
         
         //handle airplane movements
-        document.addEventListener('keydown', this.handlePlaneMovements.bind(this), false);
+        document.addEventListener('keydown', this.handleKeyDown.bind(this), false);
+        document.addEventListener('keyup', this.handleKeyUp.bind(this), false);
 
         //main game loop
         this.loop();
     }
 
-    handlePlaneMovements(){
-        this.airplane.mesh.position.y += 1;
+    handleKeyDown(evt){
+        let key = evt.keyCode || evt.which;
+
+        clearInterval(this.toStartPos);
+
+        switch(key){
+            case 38://up arrow
+                this.airplane.mesh.position.y += .5;
+                this.airplane.mesh.rotation.z += .01;
+                break;
+            case 40://down arrow
+                this.airplane.mesh.position.y -= .5;
+                this.airplane.mesh.rotation.z -= .01;
+                break;
+        }
+    }
+
+    handleKeyUp(evt){
+        let self = this;
+
+        this.toStartPos = setInterval(function(){
+            if(self.airplane.mesh.rotation.z < 0){
+                self.airplane.mesh.rotation.z += .015;
+            }
+            if(self.airplane.mesh.rotation.z > 0){
+                self.airplane.mesh.rotation.z -= .015;
+            }
+            if(self.airplane.mesh.position.y > 120){
+                self.airplane.mesh.position.y -= .5;
+            }
+            if(self.airplane.mesh.position.y < 120){
+                self.airplane.mesh.position.y += .5;
+            }
+        }, 100);
     }
 
     createScene(){
@@ -177,7 +213,7 @@ class Game{
     createPlane(){
         this.airplane = new Airplane(THREE, this.colors);
         this.airplane.mesh.scale.set(.25,.25,.25);
-        this.airplane.mesh.position.y = 100;
+        this.airplane.mesh.position.y = 120;
         this.scene.add(this.airplane.mesh);
     }
 
