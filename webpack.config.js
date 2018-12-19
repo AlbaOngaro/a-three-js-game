@@ -4,11 +4,7 @@ const sass = require('node-sass');
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
-    entry: {
-        'bundle.js': [
-            path.resolve(__dirname, 'src/js/game.js')
-        ]
-    },
+    entry: path.resolve(__dirname, 'src/js/game.js'),
     output: {
         filename: 'js/game.js',
         path: path.resolve(__dirname, 'dist')
@@ -29,10 +25,8 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin([
-            'dist'
-        ],{
-            exclude:  ['index.html']
-        }),
+            'dist/'
+        ]),
         new CopyWebpackPlugin([
             { 
                 from: './src/scss/styles.scss', 
@@ -53,6 +47,6 @@ module.exports = {
         ])
     ],
     devServer: {
-        contentBase: path.join(__dirname, 'dist')
+        publicPath: '/dist/'
     }
 };
