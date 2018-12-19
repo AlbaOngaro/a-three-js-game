@@ -40,7 +40,9 @@ class Game{
         this.airplane;
         this.time = new Time();
 
-        this.speed = 1.2;
+        this.y_speed = 0;
+        this.x_speed = 0;
+
         this.toStartPos;
 
         // main methods
@@ -65,26 +67,25 @@ class Game{
 
         switch(key){
             case 38://up arrow
-                this.airplane.mesh.position.y += .7;
-                if(this.airplane.mesh.rotation.z <= .3)
-                    this.airplane.mesh.rotation.z += .01;
+                this.y_speed = 0.01;
                 break;
             case 40://down arrow
-                this.airplane.mesh.position.y -= .7;
-                if(this.airplane.mesh.rotation.z >= -.3)
-                    this.airplane.mesh.rotation.z -= .01;
+                this.y_speed = -0.01;
                 break;
             case 37: //left arrow
-                this.airplane.mesh.position.x -= .5;
+                this.x_speed = -0.5;
                 break;
             case 39: //right arrow
-                this.airplane.mesh.position.x += .5;
+                this.x_speed = 0.5;
                 break;
         }
     }
 
     handleKeyUp(evt){
         let self = this;
+
+        this.y_speed = 0;
+        this.x_speed = 0;
 
         let delta = self.time.delta / 100;
 
@@ -240,6 +241,10 @@ class Game{
         this.airplane.propeller.rotation.x += 0.3;
         this.sea.mesh.rotation.z += .005;
         this.sky.mesh.rotation.z += .01;
+
+        //move the airplane
+        this.airplane.mesh.position.y += this.airplane.mesh.position.y * this.y_speed;
+        this.airplane.mesh.position.x += this.x_speed;
 
         // render the scene
         this.renderer.render(this.scene, this.camera);
