@@ -1,14 +1,11 @@
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const sass = require('node-sass');
+
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
-    entry: {
-        'bundle.js': [
-            path.resolve(__dirname, 'src/js/game.js')
-        ]
-    },
+    entry: path.resolve(__dirname, 'src/js/game.js'),
     output: {
         filename: 'js/game.js',
         path: path.resolve(__dirname, 'dist')
@@ -29,10 +26,8 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin([
-            'dist'
-        ],{
-            exclude:  ['index.html']
-        }),
+            'dist/'
+        ]),
         new CopyWebpackPlugin([
             { 
                 from: './src/scss/styles.scss', 
@@ -46,12 +41,13 @@ module.exports = {
                     return result.css.toString('utf-8');
                 }
             },
-        ]),
-        new CopyWebpackPlugin([
-            {from: './src/models', to: './models'}
+            {
+                from: './src/models', 
+                to: './models'
+            }
         ])
     ],
     devServer: {
-        contentBase: path.join(__dirname, 'dist')
+        publicPath: '/dist/'
     }
 };
