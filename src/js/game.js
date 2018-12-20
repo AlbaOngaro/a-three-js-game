@@ -41,14 +41,14 @@ class Game{
         this.time = new Time();
 
 
-        this.controls = {
+        this.keys = {
             up: false,
             down: false,
             left: false,
             right: false
         };
 
-        this.y_speed = .5;
+        this.y_speed = .8;
         this.x_speed = .5;
 
         this.toStartPos;
@@ -73,16 +73,16 @@ class Game{
 
         switch(key){
             case 38://up arrow
-                this.controls.up = true;
+                this.keys.up = true;
                 break;
             case 40://down arrow
-                this.controls.down = true;
+                this.keys.down = true;
                 break;
             case 37: //left arrow
-                this.controls.left = true;
+                this.keys.left = true;
                 break;
             case 39: //right arrow
-                this.controls.right = true;
+                this.keys.right = true;
                 break;
         }
     }
@@ -92,16 +92,16 @@ class Game{
 
         switch(key){
             case 38://up arrow
-                this.controls.up = false;
+                this.keys.up = false;
                 break;
             case 40://down arrow
-                this.controls.down = false;
+                this.keys.down = false;
                 break;
             case 37: //left arrow
-                this.controls.left = false;
+                this.keys.left = false;
                 break;
             case 39: //right arrow
-                this.controls.right = false;
+                this.keys.right = false;
                 break;
         }
     }
@@ -232,20 +232,23 @@ class Game{
     }
 
     moveAirplane(){
-        if(this.controls.up){
+        //vertical movement
+        if(this.keys.up && this.airplane.mesh.position.y < 165){
             this.airplane.mesh.position.y += this.y_speed * 1;
-        } else if (this.controls.down){
+            this.airplane.mesh.rotation.z += Math.cos(this.airplane.mesh.rotation.z) * .005;
+        } else if (this.keys.down && this.airplane.mesh.position.y > 40){
             this.airplane.mesh.position.y += this.y_speed * -1;
+            this.airplane.mesh.rotation.z += (Math.cos(this.airplane.mesh.rotation.z) * -1) * .005;
         } else {
             this.airplane.mesh.position.y += this.y_speed * 0;
         }
-        
-        if(this.controls.right){
-            this.airplane.mesh.position.x += this.y_speed * 1;
-        } else if (this.controls.left){
-            this.airplane.mesh.position.x += this.y_speed * -1;
+        //horizontal movement
+        if(this.keys.right && this.airplane.mesh.position.x < this.WIDTH / 10){
+            this.airplane.mesh.position.x += this.x_speed * 1;
+        } else if (this.keys.left && this.airplane.mesh.position.x > (this.WIDTH / 10 * -1)){
+            this.airplane.mesh.position.x += this.x_speed * -1;
         } else {
-            this.airplane.mesh.position.x += this.y_speed * 0;
+            this.airplane.mesh.position.x += this.x_speed * 0;
         }
     }
 
