@@ -1,5 +1,5 @@
 export default class Airplane{
-    constructor(THREE, Colors){
+    constructor(THREE, Colors, Pilot){
         this.mesh = new THREE.Object3D();
 	
         // Create the cabin
@@ -81,5 +81,9 @@ export default class Airplane{
         this.propeller.add(blade);
         this.propeller.position.set(50,0,0);
         this.mesh.add(this.propeller);
+
+        this.pilot = new Pilot(THREE, Colors);
+        this.pilot.mesh.position.set(-10,27,0);
+        this.mesh.add(this.pilot.mesh);
     }
 }

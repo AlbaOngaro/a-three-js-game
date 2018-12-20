@@ -6,6 +6,7 @@ import Sea from './Sea';
 import Cloud from './Cloud';
 import Sky from './Sky';
 import Airplane from './Airplane';
+import Pilot from './Pilot';
 
 class Game{
     constructor(){
@@ -75,16 +76,20 @@ class Game{
         let key = evt.keyCode || evt.which;
 
         switch(key){
-            case 38://up arrow
+            case 38:// up arrow 
+            case 87: // W key
                 this.keys.up = true;
                 break;
-            case 40://down arrow
+            case 40:// down arrow
+            case 83: // S key
                 this.keys.down = true;
                 break;
             case 37: //left arrow
+            case 65: // A key
                 this.keys.left = true;
                 break;
-            case 39: //right arrow
+            case 39: // Right arrow
+            case 68: // D key
                 this.keys.right = true;
                 break;
         }
@@ -95,16 +100,20 @@ class Game{
         let key = evt.keyCode || evt.which;
 
         switch(key){
-            case 38://up arrow
+            case 38:
+            case 87:
                 this.keys.up = false;
                 break;
-            case 40://down arrow
+            case 40:
+            case 83:
                 this.keys.down = false;
                 break;
-            case 37: //left arrow
+            case 37:
+            case 65:
                 this.keys.left = false;
                 break;
-            case 39: //right arrow
+            case 39: 
+            case 68:
                 this.keys.right = false;
                 break;
         }
@@ -229,7 +238,7 @@ class Game{
     }
 
     createAirplane(){
-        this.airplane = new Airplane(THREE, this.colors);
+        this.airplane = new Airplane(THREE, this.colors, Pilot);
         this.airplane.mesh.scale.set(.25,.25,.25);
         this.airplane.mesh.position.y = 120;
         this.scene.add(this.airplane.mesh);
@@ -264,6 +273,8 @@ class Game{
 
         //move airplane
         this.moveAirplane();
+
+        this.airplane.pilot.updateHairs();
 
         // render the scene
         this.renderer.render(this.scene, this.camera);
