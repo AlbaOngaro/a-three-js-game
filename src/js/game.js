@@ -40,15 +40,23 @@ class Game{
         this.airplane;
         this.time = new Time();
 
-        this.y_speed = 0;
-        this.x_speed = 0;
+
+        this.controls = {
+            up: false,
+            down: false,
+            left: false,
+            right: false
+        };
+
+        this.y_speed = .5;
+        this.x_speed = .5;
 
         this.toStartPos;
 
         // main methods
         this.createScene();
         this.createLights();
-        this.createPlane();
+        this.createAirplane();
         this.createSea();
         this.createSky();
         
@@ -63,52 +71,39 @@ class Game{
     handleKeyDown(evt){
         let key = evt.keyCode || evt.which;
 
-        clearInterval(this.toStartPos);
-
         switch(key){
             case 38://up arrow
-                this.y_speed = 0.01;
+                this.controls.up = true;
                 break;
             case 40://down arrow
-                this.y_speed = -0.01;
+                this.controls.down = true;
                 break;
             case 37: //left arrow
-                this.x_speed = -0.5;
+                this.controls.left = true;
                 break;
             case 39: //right arrow
-                this.x_speed = 0.5;
+                this.controls.right = true;
                 break;
         }
     }
 
     handleKeyUp(evt){
-        let self = this;
+        let key = evt.keyCode || evt.which;
 
-        this.y_speed = 0;
-        this.x_speed = 0;
-
-        let delta = self.time.delta / 100;
-
-        this.toStartPos = setInterval(function(){
-            if(self.airplane.mesh.rotation.z < 0){
-                self.airplane.mesh.rotation.z += .015;
-            }
-            if(self.airplane.mesh.rotation.z > 0){
-                self.airplane.mesh.rotation.z -= .015;
-            }
-            if(self.airplane.mesh.position.y > 120){
-                self.airplane.mesh.position.y -= .5;
-            }
-            if(self.airplane.mesh.position.y < 120){
-                self.airplane.mesh.position.y += .5;
-            }
-            if(self.airplane.mesh.position.x < 0){
-                self.airplane.mesh.position.x += .5;
-            }
-            if(self.airplane.mesh.position.x > 0){
-                self.airplane.mesh.position.x -= .5;
-            }
-        }, delta);
+        switch(key){
+            case 38://up arrow
+                this.controls.up = false;
+                break;
+            case 40://down arrow
+                this.controls.down = false;
+                break;
+            case 37: //left arrow
+                this.controls.left = false;
+                break;
+            case 39: //right arrow
+                this.controls.right = false;
+                break;
+        }
     }
 
     createScene(){
@@ -229,11 +224,29 @@ class Game{
 	    this.scene.add(this.sky.mesh);
     }
 
-    createPlane(){
+    createAirplane(){
         this.airplane = new Airplane(THREE, this.colors);
         this.airplane.mesh.scale.set(.25,.25,.25);
         this.airplane.mesh.position.y = 120;
         this.scene.add(this.airplane.mesh);
+    }
+
+    moveAirplane(){
+        if(this.controls.up){
+            this.airplane.mesh.position.y += this.y_speed * 1;
+        } else if (this.controls.down){
+            this.airplane.mesh.position.y += this.y_speed * -1;
+        } else {
+            this.airplane.mesh.position.y += this.y_speed * 0;
+        }
+        
+        if(this.controls.right){
+            this.airplane.mesh.position.x += this.y_speed * 1;
+        } else if (this.controls.left){
+            this.airplane.mesh.position.x += this.y_speed * -1;
+        } else {
+            this.airplane.mesh.position.x += this.y_speed * 0;
+        }
     }
 
     loop(){
@@ -242,9 +255,8 @@ class Game{
         this.sea.mesh.rotation.z += .005;
         this.sky.mesh.rotation.z += .01;
 
-        //move the airplane
-        this.airplane.mesh.position.y += this.airplane.mesh.position.y * this.y_speed;
-        this.airplane.mesh.position.x += this.x_speed;
+        //move airplane
+        this.moveAirplane();
 
         // render the scene
         this.renderer.render(this.scene, this.camera);
