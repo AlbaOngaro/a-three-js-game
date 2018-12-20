@@ -15,12 +15,14 @@ class Game{
         // colors
         this.colors = {
             red:0xf25346,
-            white:0xd8d0d1,
             brown:0x59332e,
             pink:0xF5986E,
             brownDark:0x23190f,
             blue:0x68c3c0,
-            orange:0xf7d9aa
+            orange:0xf7d9aa,
+            black:0x000000,
+            gray:0x878787,
+            white:0xffffff
         }
 
         this.scene;
@@ -69,6 +71,7 @@ class Game{
     }
 
     handleKeyDown(evt){
+        evt.preventDefault();
         let key = evt.keyCode || evt.which;
 
         switch(key){
@@ -88,6 +91,7 @@ class Game{
     }
 
     handleKeyUp(evt){
+        evt.preventDefault();
         let key = evt.keyCode || evt.which;
 
         switch(key){
