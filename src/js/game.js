@@ -1,6 +1,7 @@
 const THREE = require('three');
 const FBXLoader = require('three-fbxloader-offical')
 const OrbitControls = require('three-orbitcontrols')
+
 import Time from 'three-time';
 import Sea from './Sea';
 import Cloud from './Cloud';
@@ -42,7 +43,6 @@ class Game{
         this.sky;
         this.airplane;
         this.time = new Time();
-
 
         this.keys = {
             up: false,
@@ -268,8 +268,10 @@ class Game{
     loop(){
         // Rotate the propeller, the sea and the sky
         this.airplane.propeller.rotation.x += 0.3;
-        this.sea.mesh.rotation.z += .005;
+        
         this.sky.mesh.rotation.z += .01;
+
+        this.sea.moveWaves();
 
         //move airplane
         this.moveAirplane();
