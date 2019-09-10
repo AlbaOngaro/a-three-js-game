@@ -1,13 +1,16 @@
 const THREE = require("three");
-const FBXLoader = require("three-fbxloader-offical");
-const OrbitControls = require("three-orbitcontrols");
+const Time = require("three-time");
+import { TweenMax, Power2 } from "gsap/TweenMax";
 
-import Time from "three-time";
-import Sea from "./Sea";
-import Cloud from "./Cloud";
-import Sky from "./Sky";
-import Airplane from "./Airplane";
-import Pilot from "./Pilot";
+import colors from "./Constants/colors";
+import keys from "./Constants/keys";
+
+import Sea from "./Elements/Sea";
+import Cloud from "./Elements/Cloud";
+import Sky from "./Elements/Sky";
+import Airplane from "./Elements/Airplane";
+import Pilot from "./Elements/Pilot";
+import Gem from "./Elements/Gem";
 
 export default class Game {
   constructor() {
@@ -15,17 +18,7 @@ export default class Game {
      *   MAIN VARIABLES DEFINITION
      **/
     // colors
-    this.colors = {
-      red: 0xf25346,
-      brown: 0x59332e,
-      pink: 0xf5986e,
-      brownDark: 0x23190f,
-      blue: 0x68c3c0,
-      orange: 0xf7d9aa,
-      black: 0x000000,
-      gray: 0x878787,
-      white: 0xffffff
-    };
+    this.colors = colors;
 
     this.scene;
     this.camera;
@@ -44,12 +37,7 @@ export default class Game {
     this.airplane;
     this.time = new Time();
 
-    this.keys = {
-      up: false,
-      down: false,
-      left: false,
-      right: false
-    };
+    this.keys = keys;
 
     this.y_speed = 0.8;
     this.x_speed = 0.5;
@@ -62,6 +50,7 @@ export default class Game {
     this.createAirplane();
     this.createSea();
     this.createSky();
+    this.createGems();
 
     //handle airplane movements
     document.addEventListener("keydown", this.handleKeyDown.bind(this), false);
@@ -72,7 +61,6 @@ export default class Game {
   }
 
   handleKeyDown(evt) {
-    evt.preventDefault();
     let key = evt.keyCode || evt.which;
 
     switch (key) {
@@ -96,7 +84,6 @@ export default class Game {
   }
 
   handleKeyUp(evt) {
-    evt.preventDefault();
     let key = evt.keyCode || evt.which;
 
     switch (key) {
@@ -178,15 +165,14 @@ export default class Game {
     // we have to update the camera and the renderer size
     window.addEventListener(
       "resize",
-      function() {
-        console.log("residzed");
+      () => {
         // update height and width of the renderer and the camera
         game.HEIGHT = window.innerHeight;
         game.WIDTH = window.innerWidth;
         game.renderer.setSize(game.WIDTH, game.HEIGHT);
         game.camera.aspect = game.WIDTH / game.HEIGHT;
         game.camera.updateProjectionMatrix();
-      }.bind(game),
+      },
       false
     );
   }
@@ -241,6 +227,28 @@ export default class Game {
     this.scene.add(this.sky.mesh);
   }
 
+  createGems() {
+    this.gems = [];
+    let _this = this;
+
+    for (let i = 0; i <= 5; i++) {
+      let gem = new Gem(THREE, _this.colors.red, TweenMax, Power2);
+
+      if (i === 0) {
+        gem.mesh.position.y = Math.random() * (100 - 50) + 50;
+        gem.mesh.position.x = 4;
+      } else {
+        gem.mesh.position.y = this.gems[i - 1].mesh.position.y += 10;
+        gem.mesh.position.x = this.gems[i - 1].mesh.position.x += 10;
+      }
+
+      gem.mesh.rotation.z = (270 * Math.PI) / 180;
+
+      this.gems.push(gem);
+      this.scene.add(gem.mesh);
+    }
+  }
+
   createAirplane() {
     this.airplane = new Airplane(THREE, this.colors, Pilot);
     this.airplane.mesh.scale.set(0.25, 0.25, 0.25);
@@ -249,6 +257,7 @@ export default class Game {
   }
 
   moveAirplane() {
+    const _this = this;
     //vertical movement
     if (this.keys.up && this.airplane.mesh.position.y < 165) {
       this.airplane.mesh.position.y += this.y_speed * 1;
@@ -272,6 +281,27 @@ export default class Game {
     } else {
       this.airplane.mesh.position.x += this.x_speed * 0;
     }
+
+    this.gems.forEach(function(gem) {
+      let gem_top = gem.mesh.position.y + gem.box.max.y,
+        gem_bot = gem.mesh.position.y + gem.box.min.y,
+        gem_left = gem.mesh.position.x + gem.box.min.x,
+        gem_right = gem.mesh.position.x + gem.box.max.x;
+
+      if (
+        _this.airplane.mesh.position.x >= gem_left &&
+        _this.airplane.mesh.position.x <= gem_right &&
+        _this.airplane.mesh.position.y >= gem_bot &&
+        _this.airplane.mesh.position.y <= gem_top
+      ) {
+        gem.explode(gem.mesh.position.clone(), _this.colors.red, 0.5, () => {
+          _this.gems = _this.gems.filter(el => {
+            return el !== gem;
+          });
+          _this.scene.remove(gem.mesh);
+        });
+      }
+    });
   }
 
   loop() {
@@ -291,6 +321,8 @@ export default class Game {
     this.renderer.render(this.scene, this.camera);
 
     // call the loop function again
-    requestAnimationFrame(this.loop.bind(this));
+    requestAnimationFrame(() => {
+      this.loop();
+    });
   }
 }
