@@ -1,7 +1,7 @@
 const THREE = require("three");
 
 export default class Sea {
-  constructor(colors) {
+  constructor({ seaColor }) {
     let geom = new THREE.CylinderGeometry(600, 600, 800, 40, 10);
     geom.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
 
@@ -29,7 +29,7 @@ export default class Sea {
       });
     }
     let mat = new THREE.MeshPhongMaterial({
-      color: colors.blue,
+      color: seaColor,
       transparent: true,
       opacity: 0.8,
       flatShading: THREE.FlatShading

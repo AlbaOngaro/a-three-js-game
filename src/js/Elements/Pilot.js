@@ -1,7 +1,7 @@
 const THREE = require("three");
 
 export default class Pilot {
-  constructor(colors) {
+  constructor({ bodyColor, faceColor, hairColor, glassColor }) {
     this.mesh = new THREE.Object3D();
     this.mesh.name = "pilot";
 
@@ -11,7 +11,7 @@ export default class Pilot {
     // Body of the pilot
     let bodyGeom = new THREE.BoxGeometry(15, 15, 15);
     let bodyMat = new THREE.MeshPhongMaterial({
-      color: colors.brown,
+      color: bodyColor,
       flatShading: THREE.FlatShading
     });
     let body = new THREE.Mesh(bodyGeom, bodyMat);
@@ -20,13 +20,13 @@ export default class Pilot {
 
     // Face of the pilot
     let faceGeom = new THREE.BoxGeometry(10, 10, 10);
-    let faceMat = new THREE.MeshLambertMaterial({ color: colors.pink });
+    let faceMat = new THREE.MeshLambertMaterial({ color: faceColor });
     let face = new THREE.Mesh(faceGeom, faceMat);
     this.mesh.add(face);
 
     // Hair element
     let hairGeom = new THREE.BoxGeometry(4, 4, 4);
-    let hairMat = new THREE.MeshLambertMaterial({ color: colors.brown });
+    let hairMat = new THREE.MeshLambertMaterial({ color: hairColor });
     let hair = new THREE.Mesh(hairGeom, hairMat);
     // Align the shape of the hair to its bottom boundary, that will make it easier to scale.
     hair.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 2, 0));
@@ -71,7 +71,7 @@ export default class Pilot {
     this.mesh.add(hairs);
 
     let glassGeom = new THREE.BoxGeometry(5, 5, 5);
-    let glassMat = new THREE.MeshLambertMaterial({ color: colors.brown });
+    let glassMat = new THREE.MeshLambertMaterial({ color: glassColor });
     let glassR = new THREE.Mesh(glassGeom, glassMat);
     glassR.position.set(6, 0, 3);
     let glassL = glassR.clone();

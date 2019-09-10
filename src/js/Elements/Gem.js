@@ -4,19 +4,18 @@ import { TweenMax } from "gsap/TweenMax";
 import Particles from "./Particles";
 
 export default class Gem {
-  constructor(color) {
-    this.Particles = Particles;
-
+  constructor({ gemColor, particleColor }) {
     let gemGeom = new THREE.SphereGeometry(5, 3, 2);
+
     let gemMat = new THREE.MeshPhongMaterial({
-      color: color,
+      color: gemColor,
       shininess: 0,
-      specular: color,
+      specular: gemColor,
       flatShading: THREE.FlatShading
     });
 
+    this.particles = new Particles({ particleColor });
     this.mesh = new THREE.Mesh(gemGeom, gemMat);
-
     this.box = new THREE.Box3().setFromObject(this.mesh);
   }
 
@@ -28,8 +27,6 @@ export default class Gem {
     let targetX = pos.x + (-1 + Math.random() * 2) * 50;
     let targetY = pos.y + (-1 + Math.random() * 2) * 50;
     let speed = 0.6 + Math.random() * 0.2;
-
-    // const particles = new Particles();
 
     TweenMax.to(this.mesh.rotation, speed, {
       x: Math.random() * 12,

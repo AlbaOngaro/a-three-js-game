@@ -2,12 +2,12 @@ const THREE = require("three");
 import { rand } from "../Utils";
 
 export default class Particles {
-  constructor(colors) {
+  constructor({ particleColor }) {
     const MAX = 100;
 
     const particles = new THREE.Group();
     const geo = new THREE.SphereBufferGeometry(0.1);
-    const mat = new THREE.MeshLambertMaterial({ color: colors.red });
+    const mat = new THREE.MeshLambertMaterial({ color: particleColor });
 
     for (let i = 0; i < MAX; i++) {
       const particle = new THREE.Mesh(geo, mat);

@@ -3,7 +3,7 @@ const THREE = require("three");
 import Cloud from "./Cloud";
 
 export default class Sky {
-  constructor(colors) {
+  constructor({ cloudColor }) {
     // Create an empty container
     this.mesh = new THREE.Object3D();
 
@@ -16,7 +16,7 @@ export default class Sky {
 
     // create the clouds
     for (let i = 0; i < this.nClouds; i++) {
-      let c = new Cloud(colors);
+      let c = new Cloud({ cloudColor });
 
       // set the rotation and the position of each cloud;
       // for that we use a bit of trigonometry

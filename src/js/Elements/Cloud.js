@@ -1,7 +1,7 @@
 const THREE = require("three");
 
 export default class Cloud {
-  constructor(colors) {
+  constructor({ cloudColor }) {
     // Create an empty container that will hold the different parts of the cloud
     this.mesh = new THREE.Object3D();
 
@@ -11,7 +11,7 @@ export default class Cloud {
 
     // create a material; a simple white material will do the trick
     let mat = new THREE.MeshPhongMaterial({
-      color: colors.white
+      color: cloudColor
     });
 
     // duplicate the geometry a random number of times

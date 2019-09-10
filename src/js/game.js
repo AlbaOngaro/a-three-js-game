@@ -206,7 +206,9 @@ export default class Game {
   }
 
   createSea() {
-    this.sea = new Sea(colors);
+    this.sea = new Sea({
+      seaColor: colors.blue
+    });
 
     // push it a little bit at the bottom of the scene
     this.sea.mesh.position.y = -600;
@@ -216,7 +218,9 @@ export default class Game {
   }
 
   createSky() {
-    this.sky = new Sky(colors);
+    this.sky = new Sky({
+      cloudColor: colors.white
+    });
     this.sky.mesh.position.y = -600;
     this.scene.add(this.sky.mesh);
   }
@@ -225,7 +229,7 @@ export default class Game {
     this.gems = [];
 
     for (let i = 0; i <= 5; i++) {
-      let gem = new Gem(colors.red);
+      let gem = new Gem({ gemColor: colors.red, particleColor: colors.red });
 
       if (i === 0) {
         gem.mesh.position.y = Math.random() * (100 - 50) + 50;
@@ -243,7 +247,21 @@ export default class Game {
   }
 
   createAirplane() {
-    this.airplane = new Airplane(colors);
+    this.airplane = new Airplane({
+      cockpitColor: colors.red,
+      engineColor: colors.white,
+      tailColor: colors.red,
+      wheelHolderColor: colors.gray,
+      wheelColor: colors.black,
+      sideWingColor: colors.red,
+      propellerColor: colors.brown,
+      bladeColor: colors.brownDark,
+      bodyColor: colors.brown,
+      faceColor: colors.pink,
+      hairColor: colors.brown,
+      glassColor: colors.brown
+    });
+
     this.airplane.mesh.scale.set(0.25, 0.25, 0.25);
     this.airplane.mesh.position.y = 120;
     this.scene.add(this.airplane.mesh);

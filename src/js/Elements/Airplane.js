@@ -2,7 +2,20 @@ const THREE = require("three");
 import Pilot from "./Pilot";
 
 export default class Airplane {
-  constructor(colors) {
+  constructor({
+    cockpitColor,
+    engineColor,
+    tailColor,
+    wheelHolderColor,
+    wheelColor,
+    sideWingColor,
+    propellerColor,
+    bladeColor,
+    bodyColor,
+    faceColor,
+    hairColor,
+    glassColor
+  }) {
     this.mesh = new THREE.Object3D();
 
     // Create the cabin
@@ -16,7 +29,7 @@ export default class Airplane {
     geomCockpit.vertices[7].y += 30;
     geomCockpit.vertices[7].z -= 20;
     let matCockpit = new THREE.MeshPhongMaterial({
-      color: colors.red,
+      color: cockpitColor,
       flatShading: THREE.FlatShading
     });
     let cockpit = new THREE.Mesh(geomCockpit, matCockpit);
@@ -27,7 +40,7 @@ export default class Airplane {
     // Create the engine
     let geomEngine = new THREE.BoxGeometry(20, 50, 50, 1, 1, 1);
     let matEngine = new THREE.MeshPhongMaterial({
-      color: colors.white,
+      color: engineColor,
       flatShading: THREE.FlatShading
     });
     let engine = new THREE.Mesh(geomEngine, matEngine);
@@ -38,7 +51,7 @@ export default class Airplane {
 
     // Create the tail
     let matTailPlane = new THREE.MeshPhongMaterial({
-      color: colors.red,
+      color: tailColor,
       flatShading: THREE.FlatShading
     });
     let geomTailPlane = new THREE.BoxGeometry(15, 20, 5, 1, 1, 1);
@@ -53,7 +66,7 @@ export default class Airplane {
     // Create the wheel holder
     let geometryWheeelHolder = new THREE.BoxGeometry(8, 20, 8, 1, 1, 1);
     let matWheelHolder = new THREE.MeshPhongMaterial({
-      color: colors.gray,
+      color: wheelHolderColor,
       flatShading: THREE.FlatShading
     });
     let wheelHolder = new THREE.Mesh(geometryWheeelHolder, matWheelHolder);
@@ -64,7 +77,7 @@ export default class Airplane {
     // Create the wheel
     let geometryWheel = new THREE.CylinderGeometry(10, 10, 5, 8);
     let matWheel = new THREE.MeshPhongMaterial({
-      color: colors.black,
+      color: wheelColor,
       flatShading: THREE.FlatShading
     });
     let wheel = new THREE.Mesh(geometryWheel, matWheel);
@@ -75,7 +88,7 @@ export default class Airplane {
     // Create the wing
     let geomSideWing = new THREE.BoxGeometry(40, 8, 150, 1, 1, 1);
     let matSideWing = new THREE.MeshPhongMaterial({
-      color: colors.red,
+      color: sideWingColor,
       flatShading: THREE.FlatShading
     });
     let sideWing = new THREE.Mesh(geomSideWing, matSideWing);
@@ -87,7 +100,7 @@ export default class Airplane {
     // propeller
     let geomPropeller = new THREE.BoxGeometry(20, 10, 10, 1, 1, 1);
     let matPropeller = new THREE.MeshPhongMaterial({
-      color: colors.brown,
+      color: propellerColor,
       flatShading: THREE.FlatShading
     });
     this.propeller = new THREE.Mesh(geomPropeller, matPropeller);
@@ -97,7 +110,7 @@ export default class Airplane {
     // blades
     let geomBlade = new THREE.BoxGeometry(1, 100, 20, 1, 1, 1);
     let matBlade = new THREE.MeshPhongMaterial({
-      color: colors.brownDark,
+      color: bladeColor,
       flatShading: THREE.FlatShading
     });
 
@@ -109,7 +122,12 @@ export default class Airplane {
     this.propeller.position.set(50, 0, 0);
     this.mesh.add(this.propeller);
 
-    this.pilot = new Pilot(colors);
+    this.pilot = new Pilot({
+      bodyColor,
+      faceColor,
+      hairColor,
+      glassColor
+    });
     this.pilot.mesh.position.set(-10, 27, 0);
     this.mesh.add(this.pilot.mesh);
   }
