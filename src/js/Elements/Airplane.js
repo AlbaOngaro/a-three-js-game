@@ -1,89 +1,113 @@
-export default class Airplane{
-    constructor(THREE, Colors, Pilot){
-        this.mesh = new THREE.Object3D();
-	
-        // Create the cabin
-        let geomCockpit = new THREE.BoxGeometry(70,50,50,1,1,1);
-        geomCockpit.vertices[4].y-=10;
-        geomCockpit.vertices[4].z+=20;
-        geomCockpit.vertices[5].y-=10;
-        geomCockpit.vertices[5].z-=20;
-        geomCockpit.vertices[6].y+=30;
-        geomCockpit.vertices[6].z+=20;
-        geomCockpit.vertices[7].y+=30;
-        geomCockpit.vertices[7].z-=20;
-        let matCockpit = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
-        let cockpit = new THREE.Mesh(geomCockpit, matCockpit);
-        cockpit.castShadow = true;
-        cockpit.receiveShadow = true;
-        this.mesh.add(cockpit);
-        
-        // Create the engine
-        let geomEngine = new THREE.BoxGeometry(20,50,50,1,1,1);
-        let matEngine = new THREE.MeshPhongMaterial({color:Colors.white, shading:THREE.FlatShading});
-        let engine = new THREE.Mesh(geomEngine, matEngine);
-        engine.position.x = 40;
-        engine.castShadow = true;
-        engine.receiveShadow = true;
-        this.mesh.add(engine);
-        
-        // Create the tail
-        let matTailPlane = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
-        let geomTailPlane = new THREE.BoxGeometry(15,20,5,1,1,1);
-        geomTailPlane.vertices[0].x = -3;
-        geomTailPlane.vertices[1].x = -3;
-        let tailPlane = new THREE.Mesh(geomTailPlane, matTailPlane);
-        tailPlane.position.set(-27,25,0);
-        tailPlane.castShadow = true;
-        tailPlane.receiveShadow = true;
-        this.mesh.add(tailPlane);
+export default class Airplane {
+  constructor(THREE, Colors, Pilot) {
+    this.mesh = new THREE.Object3D();
 
-        // Create the wheel holder
-        let geometryWheeelHolder = new THREE.BoxGeometry(8,20,8,1,1,1);
-        let matWheelHolder = new THREE.MeshPhongMaterial({color:Colors.gray, shading:THREE.FlatShading});
-        let wheelHolder = new THREE.Mesh(geometryWheeelHolder, matWheelHolder);
-        wheelHolder.position.set(-13,-10,0);
-        wheelHolder.rotation.z = 15 * Math.PI / 180 * -1;
-        this.mesh.add(wheelHolder);
+    // Create the cabin
+    let geomCockpit = new THREE.BoxGeometry(70, 50, 50, 1, 1, 1);
+    geomCockpit.vertices[4].y -= 10;
+    geomCockpit.vertices[4].z += 20;
+    geomCockpit.vertices[5].y -= 10;
+    geomCockpit.vertices[5].z -= 20;
+    geomCockpit.vertices[6].y += 30;
+    geomCockpit.vertices[6].z += 20;
+    geomCockpit.vertices[7].y += 30;
+    geomCockpit.vertices[7].z -= 20;
+    let matCockpit = new THREE.MeshPhongMaterial({
+      color: Colors.red,
+      flatShading: THREE.FlatShading
+    });
+    let cockpit = new THREE.Mesh(geomCockpit, matCockpit);
+    cockpit.castShadow = true;
+    cockpit.receiveShadow = true;
+    this.mesh.add(cockpit);
 
-        // Create the wheel
-        let geometryWheel = new THREE.CylinderGeometry(10,10,5,8);
-        let matWheel = new THREE.MeshPhongMaterial({color:Colors.black, shading:THREE.FlatShading})
-        let wheel = new THREE.Mesh(geometryWheel, matWheel);
-        wheel.rotation.x = 90 * Math.PI / 180;
-        wheel.position.set(-15,-15,0);
-        this.mesh.add(wheel);
+    // Create the engine
+    let geomEngine = new THREE.BoxGeometry(20, 50, 50, 1, 1, 1);
+    let matEngine = new THREE.MeshPhongMaterial({
+      color: Colors.white,
+      flatShading: THREE.FlatShading
+    });
+    let engine = new THREE.Mesh(geomEngine, matEngine);
+    engine.position.x = 40;
+    engine.castShadow = true;
+    engine.receiveShadow = true;
+    this.mesh.add(engine);
 
-        // Create the wing
-        let geomSideWing = new THREE.BoxGeometry(40,8,150,1,1,1);
-        let matSideWing = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
-        let sideWing = new THREE.Mesh(geomSideWing, matSideWing);
-        sideWing.position.x = 10;
-        sideWing.castShadow = true;
-        sideWing.receiveShadow = true;
-        this.mesh.add(sideWing);
-        
-        // propeller
-        let geomPropeller = new THREE.BoxGeometry(20,10,10,1,1,1);
-        let matPropeller = new THREE.MeshPhongMaterial({color:Colors.brown, shading:THREE.FlatShading});
-        this.propeller = new THREE.Mesh(geomPropeller, matPropeller);
-        this.propeller.castShadow = true;
-        this.propeller.receiveShadow = true;
-        
-        // blades
-        let geomBlade = new THREE.BoxGeometry(1,100,20,1,1,1);
-        let matBlade = new THREE.MeshPhongMaterial({color:Colors.brownDark, shading:THREE.FlatShading});
-        
-        let blade = new THREE.Mesh(geomBlade, matBlade);
-        blade.position.set(8,0,0);
-        blade.castShadow = true;
-        blade.receiveShadow = true;
-        this.propeller.add(blade);
-        this.propeller.position.set(50,0,0);
-        this.mesh.add(this.propeller);
+    // Create the tail
+    let matTailPlane = new THREE.MeshPhongMaterial({
+      color: Colors.red,
+      flatShading: THREE.FlatShading
+    });
+    let geomTailPlane = new THREE.BoxGeometry(15, 20, 5, 1, 1, 1);
+    geomTailPlane.vertices[0].x = -3;
+    geomTailPlane.vertices[1].x = -3;
+    let tailPlane = new THREE.Mesh(geomTailPlane, matTailPlane);
+    tailPlane.position.set(-27, 25, 0);
+    tailPlane.castShadow = true;
+    tailPlane.receiveShadow = true;
+    this.mesh.add(tailPlane);
 
-        this.pilot = new Pilot(THREE, Colors);
-        this.pilot.mesh.position.set(-10,27,0);
-        this.mesh.add(this.pilot.mesh);
-    }
+    // Create the wheel holder
+    let geometryWheeelHolder = new THREE.BoxGeometry(8, 20, 8, 1, 1, 1);
+    let matWheelHolder = new THREE.MeshPhongMaterial({
+      color: Colors.gray,
+      flatShading: THREE.FlatShading
+    });
+    let wheelHolder = new THREE.Mesh(geometryWheeelHolder, matWheelHolder);
+    wheelHolder.position.set(-13, -10, 0);
+    wheelHolder.rotation.z = ((15 * Math.PI) / 180) * -1;
+    this.mesh.add(wheelHolder);
+
+    // Create the wheel
+    let geometryWheel = new THREE.CylinderGeometry(10, 10, 5, 8);
+    let matWheel = new THREE.MeshPhongMaterial({
+      color: Colors.black,
+      flatShading: THREE.FlatShading
+    });
+    let wheel = new THREE.Mesh(geometryWheel, matWheel);
+    wheel.rotation.x = (90 * Math.PI) / 180;
+    wheel.position.set(-15, -15, 0);
+    this.mesh.add(wheel);
+
+    // Create the wing
+    let geomSideWing = new THREE.BoxGeometry(40, 8, 150, 1, 1, 1);
+    let matSideWing = new THREE.MeshPhongMaterial({
+      color: Colors.red,
+      flatShading: THREE.FlatShading
+    });
+    let sideWing = new THREE.Mesh(geomSideWing, matSideWing);
+    sideWing.position.x = 10;
+    sideWing.castShadow = true;
+    sideWing.receiveShadow = true;
+    this.mesh.add(sideWing);
+
+    // propeller
+    let geomPropeller = new THREE.BoxGeometry(20, 10, 10, 1, 1, 1);
+    let matPropeller = new THREE.MeshPhongMaterial({
+      color: Colors.brown,
+      flatShading: THREE.FlatShading
+    });
+    this.propeller = new THREE.Mesh(geomPropeller, matPropeller);
+    this.propeller.castShadow = true;
+    this.propeller.receiveShadow = true;
+
+    // blades
+    let geomBlade = new THREE.BoxGeometry(1, 100, 20, 1, 1, 1);
+    let matBlade = new THREE.MeshPhongMaterial({
+      color: Colors.brownDark,
+      flatShading: THREE.FlatShading
+    });
+
+    let blade = new THREE.Mesh(geomBlade, matBlade);
+    blade.position.set(8, 0, 0);
+    blade.castShadow = true;
+    blade.receiveShadow = true;
+    this.propeller.add(blade);
+    this.propeller.position.set(50, 0, 0);
+    this.mesh.add(this.propeller);
+
+    this.pilot = new Pilot(THREE, Colors);
+    this.pilot.mesh.position.set(-10, 27, 0);
+    this.mesh.add(this.pilot.mesh);
+  }
 }

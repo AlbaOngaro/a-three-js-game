@@ -8,7 +8,7 @@ export default class Pilot{
 
         // Body of the pilot
         let bodyGeom = new THREE.BoxGeometry(15,15,15);
-        let bodyMat = new THREE.MeshPhongMaterial({color:Colors.brown, shading:THREE.FlatShading});
+        let bodyMat = new THREE.MeshPhongMaterial({color:Colors.brown, flatShading:THREE.FlatShading});
         let body = new THREE.Mesh(bodyGeom, bodyMat);
         body.position.set(2,-12,0);
         this.mesh.add(body);

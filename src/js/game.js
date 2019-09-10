@@ -282,7 +282,7 @@ export default class Game {
       this.airplane.mesh.position.x += this.x_speed * 0;
     }
 
-    this.gems.forEach(function(gem) {
+    this.gems.forEach(gem => {
       let gem_top = gem.mesh.position.y + gem.box.max.y,
         gem_bot = gem.mesh.position.y + gem.box.min.y,
         gem_left = gem.mesh.position.x + gem.box.min.x,
@@ -294,11 +294,14 @@ export default class Game {
         _this.airplane.mesh.position.y >= gem_bot &&
         _this.airplane.mesh.position.y <= gem_top
       ) {
-        gem.explode(gem.mesh.position.clone(), _this.colors.red, 0.5, () => {
+        gem.explode(gem.mesh.position.clone(), _this.colors.red, 1, () => {
           _this.gems = _this.gems.filter(el => {
             return el !== gem;
           });
           _this.scene.remove(gem.mesh);
+          if (this.gems.length === 0) {
+            console.log("You won");
+          }
         });
       }
     });
