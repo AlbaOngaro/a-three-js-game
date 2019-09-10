@@ -1,15 +1,12 @@
 const THREE = require("three");
 const Time = require("three-time");
-import { TweenMax, Power2 } from "gsap/TweenMax";
 
 import colors from "./Constants/colors";
 import keys from "./Constants/keys";
 
 import Sea from "./Elements/Sea";
-import Cloud from "./Elements/Cloud";
 import Sky from "./Elements/Sky";
 import Airplane from "./Elements/Airplane";
-import Pilot from "./Elements/Pilot";
 import Gem from "./Elements/Gem";
 
 export default class Game {
@@ -17,9 +14,6 @@ export default class Game {
     /**
      *   MAIN VARIABLES DEFINITION
      **/
-    // colors
-    this.colors = colors;
-
     this.scene;
     this.camera;
     this.fieldOfView;
@@ -212,7 +206,7 @@ export default class Game {
   }
 
   createSea() {
-    this.sea = new Sea(THREE, this.colors);
+    this.sea = new Sea(colors);
 
     // push it a little bit at the bottom of the scene
     this.sea.mesh.position.y = -600;
@@ -222,17 +216,16 @@ export default class Game {
   }
 
   createSky() {
-    this.sky = new Sky(THREE, Cloud, this.colors);
+    this.sky = new Sky(colors);
     this.sky.mesh.position.y = -600;
     this.scene.add(this.sky.mesh);
   }
 
   createGems() {
     this.gems = [];
-    let _this = this;
 
     for (let i = 0; i <= 5; i++) {
-      let gem = new Gem(THREE, _this.colors.red, TweenMax, Power2);
+      let gem = new Gem(colors.red);
 
       if (i === 0) {
         gem.mesh.position.y = Math.random() * (100 - 50) + 50;
@@ -250,14 +243,13 @@ export default class Game {
   }
 
   createAirplane() {
-    this.airplane = new Airplane(THREE, this.colors, Pilot);
+    this.airplane = new Airplane(colors);
     this.airplane.mesh.scale.set(0.25, 0.25, 0.25);
     this.airplane.mesh.position.y = 120;
     this.scene.add(this.airplane.mesh);
   }
 
   moveAirplane() {
-    const _this = this;
     //vertical movement
     if (this.keys.up && this.airplane.mesh.position.y < 165) {
       this.airplane.mesh.position.y += this.y_speed * 1;
@@ -289,16 +281,18 @@ export default class Game {
         gem_right = gem.mesh.position.x + gem.box.max.x;
 
       if (
-        _this.airplane.mesh.position.x >= gem_left &&
-        _this.airplane.mesh.position.x <= gem_right &&
-        _this.airplane.mesh.position.y >= gem_bot &&
-        _this.airplane.mesh.position.y <= gem_top
+        this.airplane.mesh.position.x >= gem_left &&
+        this.airplane.mesh.position.x <= gem_right &&
+        this.airplane.mesh.position.y >= gem_bot &&
+        this.airplane.mesh.position.y <= gem_top
       ) {
-        gem.explode(gem.mesh.position.clone(), _this.colors.red, 1, () => {
-          _this.gems = _this.gems.filter(el => {
+        gem.explode(gem.mesh.position.clone(), colors.red, 1, () => {
+          this.gems = this.gems.filter(el => {
             return el !== gem;
           });
-          _this.scene.remove(gem.mesh);
+
+          this.scene.remove(gem.mesh);
+
           if (this.gems.length === 0) {
             console.log("You won");
           }
