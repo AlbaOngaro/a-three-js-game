@@ -13,7 +13,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: "babel-loader",
@@ -40,7 +40,6 @@ module.exports = {
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist/"),
-    port: 3000,
-    open: true
+    port: 3000
   }
 };
