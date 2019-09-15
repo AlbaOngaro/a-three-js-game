@@ -1,0 +1,16 @@
+language: node_js
+install:
+  - npm install
+
+before_script:
+  - npm run build
+
+skip_cleanup: true
+
+deploy:
+  provider: s3
+  local-dir: dist
+  access_key_id: AKIAJSRKMXT75JV7HV3Q
+  secret_access_key:
+    secure: HnIj/AyNyN8S4ykCtcDk8+793PsCPyY7mw7uVJcrrmkeX1H7RUYk4zgDXUfMQvxM2Je+Z1CVspFulj9N81/dICatEZrSs8gW2b+NJsQM8/dFYjraqjKMpf2qrjNg9aZswi96dDDq3MeSmoct8/FJo2Ou9pDVhI7qlVaSnrbQfb9RW5d1930E9aFPLmGgZfkOTp0qcK0BCGdDGewx5ooMdY2LFTwpnFKCUntpuaWN1vrIoWk5hBsQn6dzGFHKnvFElDck84GywM7bKRyroQTYbwwR30UlFXE7wDZvwWer94LvgNcDS7Rcrjkwu8SKPWjcHbOATrifWrDYsJ0dHluZjqsAQ1KFSjSwbIy79zT1u6mBWc7zWUNjIyAXiEEX9DrqAE/F8w+oRGNtoK1isjXm5K1bA0TladMhw6qo7IingrxmXw/NmSR6VIHqQtqy3Z+o3+DkKN3hq2wwoA3uoVgThf8WtKA33IfAFq7IqUDG2xjMdnxYwtCHwiOJvAyg/fIH/5bD+9cj7kuFsi4APNgZirrCrk33WE16yjKCNn9LyOSIPv7LNbpa2M9BCVvwR8X0wUv9jRCRgOX+C3Mu1I5h56+EsdgWh54ZoeygmYFghyfHFILrE0Kn9tvTEfZs4S9w4gjVWeczetZvWudSC9z4BCs1KPf3tEYxgezjXaqMDVE=
+  bucket: cloudblaze.albaongaro.ch
