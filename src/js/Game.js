@@ -3,6 +3,7 @@ const Time = require("three-time");
 
 import colors from "./Constants/colors";
 import keys from "./Constants/keys";
+import { rand } from "./Utils";
 
 import Sea from "./Elements/Sea";
 import Sky from "./Elements/Sky";
@@ -232,11 +233,11 @@ export default class Game {
       let gem = new Gem({ gemColor: colors.red, particleColor: colors.red });
 
       if (i === 0) {
-        gem.mesh.position.y = Math.random() * (100 - 50) + 50;
+        gem.mesh.position.y = rand(50, 100);
         gem.mesh.position.x = 4;
       } else {
-        gem.mesh.position.y = this.gems[i - 1].mesh.position.y += 10;
-        gem.mesh.position.x = this.gems[i - 1].mesh.position.x += 10;
+        gem.mesh.position.y = this.gems[i - 1].mesh.position.y += rand(3, 10);
+        gem.mesh.position.x = this.gems[i - 1].mesh.position.x += rand(3, 10);
       }
 
       gem.mesh.rotation.z = (270 * Math.PI) / 180;
@@ -329,6 +330,10 @@ export default class Game {
 
     //move airplane
     this.moveAirplane();
+
+    if (!this.gems.length) {
+      this.createGems();
+    }
 
     this.airplane.pilot.updateHairs();
 
