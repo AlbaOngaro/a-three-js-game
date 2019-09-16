@@ -1,5 +1,6 @@
 const THREE = require("three");
 const Time = require("three-time");
+import { TweenMax } from "gsap/TweenMax";
 
 import colors from "./Constants/colors";
 import keys from "./Constants/keys";
@@ -31,6 +32,8 @@ export default class Game {
     this.sky;
     this.airplane;
     this.time = new Time();
+    this.MAXGEMS = 10;
+    this.MINGEMS = 3;
 
     this.keys = keys;
 
@@ -227,24 +230,32 @@ export default class Game {
   }
 
   createGems() {
-    this.gems = [];
+    this.gems = new THREE.Group();
 
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i <= rand(this.MINGEMS, this.MAXGEMS); i++) {
       let gem = new Gem({ gemColor: colors.red, particleColor: colors.red });
 
       if (i === 0) {
         gem.mesh.position.y = rand(50, 100);
         gem.mesh.position.x = 4;
       } else {
-        gem.mesh.position.y = this.gems[i - 1].mesh.position.y += rand(3, 10);
-        gem.mesh.position.x = this.gems[i - 1].mesh.position.x += rand(3, 10);
+        gem.mesh.position.y = this.gems.children[i - 1].position.y += rand(
+          3,
+          10
+        );
+        gem.mesh.position.x = this.gems.children[i - 1].position.x += rand(
+          3,
+          10
+        );
       }
 
       gem.mesh.rotation.z = (270 * Math.PI) / 180;
 
-      this.gems.push(gem);
-      this.scene.add(gem.mesh);
+      this.gems.add(gem.mesh);
     }
+
+    this.gems.rotation.z = -2;
+    this.scene.add(this.gems);
   }
 
   createAirplane() {
@@ -281,41 +292,34 @@ export default class Game {
     } else {
       this.airplane.mesh.position.y += this.y_speed * 0;
     }
-    //horizontal movement
-    if (this.keys.right && this.airplane.mesh.position.x < this.WIDTH / 10) {
-      this.airplane.mesh.position.x += this.x_speed * 1;
-    } else if (
-      this.keys.left &&
-      this.airplane.mesh.position.x > (this.WIDTH / 10) * -1
-    ) {
-      this.airplane.mesh.position.x += this.x_speed * -1;
-    } else {
-      this.airplane.mesh.position.x += this.x_speed * 0;
-    }
+  }
 
-    this.gems.forEach(gem => {
-      let gem_top = gem.mesh.position.y + gem.box.max.y,
-        gem_bot = gem.mesh.position.y + gem.box.min.y,
-        gem_left = gem.mesh.position.x + gem.box.min.x,
-        gem_right = gem.mesh.position.x + gem.box.max.x;
+  explode(gem, color, scale, callback) {
+    gem.material.color = new THREE.Color(color);
+    gem.material.needsUpdate = true;
+    gem.scale.set(scale, scale, scale);
 
-      if (
-        this.airplane.mesh.position.x >= gem_left &&
-        this.airplane.mesh.position.x <= gem_right &&
-        this.airplane.mesh.position.y >= gem_bot &&
-        this.airplane.mesh.position.y <= gem_top
-      ) {
-        gem.explode(gem.mesh.position.clone(), colors.red, 1, () => {
-          this.gems = this.gems.filter(el => {
-            return el !== gem;
-          });
+    let targetX = gem.position.x + (-1 + Math.random() * 2) * 50;
+    let targetY = gem.position.y + (-1 + Math.random() * 2) * 50;
+    let speed = 0.6 + Math.random() * 0.2;
 
-          this.scene.remove(gem.mesh);
+    TweenMax.to(gem.rotation, speed, {
+      x: Math.random() * 12,
+      y: Math.random() * 12
+    });
 
-          if (this.gems.length === 0) {
-            console.log("You won");
-          }
-        });
+    TweenMax.to(gem.scale, speed, {
+      x: 0.1,
+      y: 0.1,
+      z: 0.1
+    });
+
+    TweenMax.to(gem.position, speed, {
+      x: targetX,
+      y: targetY,
+      onComplete() {
+        if (typeof callback !== "function") return;
+        callback.call();
       }
     });
   }
@@ -331,7 +335,23 @@ export default class Game {
     //move airplane
     this.moveAirplane();
 
-    if (!this.gems.length) {
+    const raycaster = new THREE.Raycaster(
+      this.airplane.mesh.position.clone(),
+      new THREE.Vector3(0.7, 0.4, 0)
+    );
+
+    const intersects = raycaster.intersectObjects(this.gems.children);
+
+    intersects.forEach(gem => {
+      // this.scene.remove(gem.object);
+      this.explode(gem.object, colors.red, 1, () => {
+        this.gems.remove(gem.object);
+      });
+    });
+
+    this.gems.rotation.z += 0.01;
+
+    if (!this.gems.children.length) {
       this.createGems();
     }
 
