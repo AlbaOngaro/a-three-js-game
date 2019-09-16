@@ -1,8 +1,6 @@
 const THREE = require("three");
 import { TweenMax } from "gsap/TweenMax";
 
-import Particles from "./Particles";
-
 export default class Gem {
   constructor({ gemColor, particleColor }) {
     let gemGeom = new THREE.SphereGeometry(5, 3, 2);
@@ -14,12 +12,11 @@ export default class Gem {
       flatShading: THREE.FlatShading
     });
 
-    this.particles = new Particles({ particleColor });
     this.mesh = new THREE.Mesh(gemGeom, gemMat);
     this.box = new THREE.Box3().setFromObject(this.mesh);
   }
 
-  explode(pos, color, scale, callback) {
+  static explode(pos, color, scale, callback) {
     this.mesh.material.color = new THREE.Color(color);
     this.mesh.material.needsUpdate = true;
     this.mesh.scale.set(scale, scale, scale);

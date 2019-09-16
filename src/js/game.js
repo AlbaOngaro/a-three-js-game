@@ -226,24 +226,27 @@ export default class Game {
   }
 
   createGems() {
-    this.gems = [];
+    this.gems = new THREE.Object3D();
 
     for (let i = 0; i <= 5; i++) {
-      let gem = new Gem({ gemColor: colors.red, particleColor: colors.red });
+      let gem = new Gem({ gemColor: colors.red });
 
       if (i === 0) {
-        gem.mesh.position.y = Math.random() * (100 - 50) + 50;
+        gem.mesh.position.y = 120;
         gem.mesh.position.x = 4;
       } else {
-        gem.mesh.position.y = this.gems[i - 1].mesh.position.y += 10;
-        gem.mesh.position.x = this.gems[i - 1].mesh.position.x += 10;
+        gem.mesh.position.y = this.gems.children[i - 1].position.y += 10;
+        gem.mesh.position.x = this.gems.children[i - 1].position.x += 10;
       }
 
       gem.mesh.rotation.z = (270 * Math.PI) / 180;
 
-      this.gems.push(gem);
-      this.scene.add(gem.mesh);
+      this.gems.add(gem.mesh);
     }
+    this.gems.position.x = 0;
+    this.gems.position.y = 50;
+
+    this.scene.add(this.gems);
   }
 
   createAirplane() {
@@ -291,32 +294,6 @@ export default class Game {
     } else {
       this.airplane.mesh.position.x += this.x_speed * 0;
     }
-
-    this.gems.forEach(gem => {
-      let gem_top = gem.mesh.position.y + gem.box.max.y,
-        gem_bot = gem.mesh.position.y + gem.box.min.y,
-        gem_left = gem.mesh.position.x + gem.box.min.x,
-        gem_right = gem.mesh.position.x + gem.box.max.x;
-
-      if (
-        this.airplane.mesh.position.x >= gem_left &&
-        this.airplane.mesh.position.x <= gem_right &&
-        this.airplane.mesh.position.y >= gem_bot &&
-        this.airplane.mesh.position.y <= gem_top
-      ) {
-        gem.explode(gem.mesh.position.clone(), colors.red, 1, () => {
-          this.gems = this.gems.filter(el => {
-            return el !== gem;
-          });
-
-          this.scene.remove(gem.mesh);
-
-          if (this.gems.length === 0) {
-            console.log("You won");
-          }
-        });
-      }
-    });
   }
 
   loop() {
@@ -324,6 +301,7 @@ export default class Game {
     this.airplane.propeller.rotation.x += 0.3;
 
     this.sky.mesh.rotation.z += 0.01;
+    this.gems.rotation.z += 0.01;
 
     this.sea.moveWaves();
 
