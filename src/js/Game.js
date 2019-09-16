@@ -16,6 +16,7 @@ export default class Game {
     /**
      *   MAIN VARIABLES DEFINITION
      **/
+    this.score = 0;
     this.scene;
     this.camera;
     this.fieldOfView;
@@ -56,6 +57,10 @@ export default class Game {
 
     //main game loop
     this.loop();
+  }
+
+  updateScore() {
+    document.getElementById("score").innerText = `Score: ${this.score}`;
   }
 
   handleKeyDown(evt) {
@@ -232,22 +237,17 @@ export default class Game {
   createGems() {
     this.gems = new THREE.Group();
 
-    for (let i = 0; i <= rand(this.MINGEMS, this.MAXGEMS); i++) {
-      let gem = new Gem({ gemColor: colors.red, particleColor: colors.red });
+    const totalgems = rand(this.MINGEMS, this.MAXGEMS);
+    const stepAngle = (Math.PI * 2) / totalgems / rand(0, 10);
+    const h = rand(100, 175);
 
-      if (i === 0) {
-        gem.mesh.position.y = rand(50, 100);
-        gem.mesh.position.x = 4;
-      } else {
-        gem.mesh.position.y = this.gems.children[i - 1].position.y += rand(
-          3,
-          10
-        );
-        gem.mesh.position.x = this.gems.children[i - 1].position.x += rand(
-          3,
-          10
-        );
-      }
+    for (let i = 0; i <= totalgems; i++) {
+      const gem = new Gem({ gemColor: colors.red, particleColor: colors.red });
+
+      const a = stepAngle * i;
+
+      gem.mesh.position.y = Math.sin(a) * h;
+      gem.mesh.position.x = Math.cos(a) * h;
 
       gem.mesh.rotation.z = (270 * Math.PI) / 180;
 
@@ -283,12 +283,8 @@ export default class Game {
     //vertical movement
     if (this.keys.up && this.airplane.mesh.position.y < 165) {
       this.airplane.mesh.position.y += this.y_speed * 1;
-      this.airplane.mesh.rotation.z +=
-        Math.cos(this.airplane.mesh.rotation.z) * 0.005;
     } else if (this.keys.down && this.airplane.mesh.position.y > 40) {
       this.airplane.mesh.position.y += this.y_speed * -1;
-      this.airplane.mesh.rotation.z +=
-        Math.cos(this.airplane.mesh.rotation.z) * -1 * 0.005;
     } else {
       this.airplane.mesh.position.y += this.y_speed * 0;
     }
@@ -325,16 +321,22 @@ export default class Game {
   }
 
   loop() {
-    // Rotate the propeller, the sea and the sky
+    // Rotate the propeller,
     this.airplane.propeller.rotation.x += 0.3;
 
+    // Rotate the sky
     this.sky.mesh.rotation.z += 0.01;
 
+    // Animate the wawes
     this.sea.moveWaves();
 
     //move airplane
     this.moveAirplane();
 
+    // Rotate the gems
+    this.gems.rotation.z += 0.01;
+
+    // check for collisions on gems
     const raycaster = new THREE.Raycaster(
       this.airplane.mesh.position.clone(),
       new THREE.Vector3(0.7, 0.4, 0)
@@ -343,18 +345,19 @@ export default class Game {
     const intersects = raycaster.intersectObjects(this.gems.children);
 
     intersects.forEach(gem => {
-      // this.scene.remove(gem.object);
       this.explode(gem.object, colors.red, 1, () => {
+        this.score += 1;
         this.gems.remove(gem.object);
+        this.updateScore();
       });
     });
 
-    this.gems.rotation.z += 0.01;
-
+    // Recreate the gems
     if (!this.gems.children.length) {
       this.createGems();
     }
 
+    // Update the pilot's hairs
     this.airplane.pilot.updateHairs();
 
     // render the scene
